@@ -12,7 +12,7 @@ public class Movies {
     private int vote_count;
     private String title;
     private boolean video;
-    private int vote_average;
+    private double vote_average;
     private double popularity;
     private String poster_path;
     private String original_language;
@@ -55,11 +55,11 @@ public class Movies {
         this.video = video;
     }
 
-    public int getVote_average() {
+    public double getVote_average() {
         return vote_average;
     }
 
-    public void setVote_average(int vote_average) {
+    public void setVote_average(double vote_average) {
         this.vote_average = vote_average;
     }
 

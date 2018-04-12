@@ -1,9 +1,10 @@
 package com.myd.movies.common.data.remote;
 
-import com.myd.movies.common.data.remote.response.MoviesResponseBean;
+import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 
-import retrofit2.Call;
+import io.reactivex.Maybe;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * Created by MYD on 4/11/18.
@@ -12,5 +13,6 @@ import retrofit2.http.GET;
 
 public interface TmdbService {
     @GET("discover/movie?sort_by=release_date.desc")
-    Call<MoviesResponseBean> movieDiscoverByReleaseDateDesc();
+    Maybe<MoviesRemoteResponse> movieDiscoverByReleaseDateDesc(
+            @Query("release_date.lte") String date, @Query("page") int page);
 }

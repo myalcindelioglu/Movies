@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 
-public class MoviesResponseBean {
+public class MoviesRemoteResponse {
     private int page;
     private int total_results;
     private int total_pages;
@@ -49,7 +49,7 @@ public class MoviesResponseBean {
 
     @Override
     public String toString() {
-        return "MoviesResponseBean{" +
+        return "MoviesRemoteResponse{" +
                 "page=" + page +
                 ", total_results=" + total_results +
                 ", total_pages=" + total_pages +

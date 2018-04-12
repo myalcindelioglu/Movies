@@ -1,14 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@android:color/background_dark">
 
-    <TextView
-        android:id="@+id/fragment_movie_list_item_txt"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/fragment_movie_list_item_movies_poster_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sdasdasdsad"
-        android:layout_gravity="center"
-        />
+        android:layout_alignParentStart="true"
+        android:background="@android:color/darker_gray">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/poster_question_mark"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="32sp"/>
+        <ImageView
+            android:id="@+id/fragment_movie_list_item_movies_poster_iv"
+            android:layout_width="120dp"
+            android:layout_height="170dp"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"/>
+    </android.support.design.widget.CoordinatorLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+    <ImageView
+        android:id="@+id/fragment_movie_list_item_movies_arrow_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/end_margin"
+        android:src="@android:drawable/arrow_down_float"
+        android:rotation="270"/>
+
+    <LinearLayout
+        android:id="@+id/fragment_movie_list_item_movies_info_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/fragment_movie_list_item_movies_poster_cl"
+        android:layout_toStartOf="@id/fragment_movie_list_item_movies_arrow_iv"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/end_margin"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/fragment_movie_list_item_movies_title_txv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textColor="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/fragment_movie_list_item_movies_release_date_txv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

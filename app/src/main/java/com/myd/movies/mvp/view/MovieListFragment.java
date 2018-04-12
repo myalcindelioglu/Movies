@@ -32,6 +32,8 @@ public class MovieListFragment extends Fragment {
     private MoviesRemoteDataSource remoteDataSource;
     private MoviesAdapter moviesAdapter;
 
+    private int totalPages = 0;
+
     public MovieListFragment() {
     }
 
@@ -47,28 +49,32 @@ public class MovieListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.fragment_movie_list_rcv);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemViewCacheSize(3);
+        recyclerView.addOnScrollListener(new InfiniteScrollListener(linearLayoutManager) {
+
+            @Override
+            public void onLoadMore(int nextPage) {
+                if (nextPage <= totalPages) loadMovies(nextPage);
+            }
+        });
 
         moviesAdapter = new MoviesAdapter(new ArrayList<>());
         recyclerView.setAdapter(moviesAdapter);
 
+        loadMovies(1);
+
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Maybe<MoviesRemoteResponse> responseMaybe = remoteDataSource.discoverMovies(1).compose(RxUtil.applyMaybeSchedulers());
+    private void loadMovies(int page) {
+        Maybe<MoviesRemoteResponse> responseMaybe = remoteDataSource.discoverMovies(page).compose(RxUtil.applyMaybeSchedulers());
         responseMaybe.subscribe(resp -> {
-            moviesAdapter.movies = resp.getResults();
-            moviesAdapter.notifyDataSetChanged();
-        }, e -> {
-            Log.e(TAG, "discoverMovies has an error", e);
-                }
+                    moviesAdapter.movies.addAll(resp.getResults());
+                    totalPages = resp.getTotal_pages();
+                    moviesAdapter.notifyDataSetChanged();
+                }, e -> Log.e(TAG, "discoverMovies has an error", e)
         );
-
     }
 
     private class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {

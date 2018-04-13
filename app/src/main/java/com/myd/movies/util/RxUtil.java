@@ -1,6 +1,7 @@
 package com.myd.movies.util;
 
 import io.reactivex.MaybeTransformer;
+import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -11,6 +12,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RxUtil {
     public static <T> MaybeTransformer<T, T> applyMaybeSchedulers() {
+        return observable -> observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static <T> SingleTransformer<T, T> applySingleSchedulers() {
         return observable -> observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

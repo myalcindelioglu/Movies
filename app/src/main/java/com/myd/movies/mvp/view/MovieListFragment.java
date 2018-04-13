@@ -15,9 +15,11 @@ import android.widget.TextView;
 
 import com.myd.movies.R;
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
+import com.myd.movies.mvp.model.MovieDetails;
+import com.myd.movies.mvp.model.MovieDetailsDataSource;
 import com.myd.movies.mvp.model.Movies;
+import com.myd.movies.mvp.model.remote.MovieDetailsRemoteDataSource;
 import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
-import com.myd.movies.util.DateUtil;
 import com.myd.movies.util.RxUtil;
 import com.squareup.picasso.Picasso;
 
@@ -25,16 +27,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.subjects.PublishSubject;
 
 public class MovieListFragment extends Fragment {
 
     private static final String TAG = "MovieListFragment";
 
-    private MoviesRemoteDataSource remoteDataSource;
+    private MoviesRemoteDataSource moviesRemoteDataSource;
+    private MovieDetailsDataSource movieDetailsDataSource;
     private MoviesAdapter moviesAdapter;
 
     private int totalPages = 0;
     private String filterDate = "";
+
 
     public MovieListFragment() {
     }
@@ -42,7 +49,8 @@ public class MovieListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        remoteDataSource = new MoviesRemoteDataSource();
+        moviesRemoteDataSource = new MoviesRemoteDataSource();
+        movieDetailsDataSource = new MovieDetailsRemoteDataSource();
     }
 
     @Override
@@ -67,13 +75,23 @@ public class MovieListFragment extends Fragment {
         moviesAdapter = new MoviesAdapter(new ArrayList<>());
         recyclerView.setAdapter(moviesAdapter);
 
+        moviesAdapter.getOnClicks().subscribe(id -> {
+            Single<MovieDetails> movieDetailsSingle =
+                    movieDetailsDataSource.getDetails(id).compose(RxUtil.applySingleSchedulers());
+            movieDetailsSingle.subscribe(movieDetails -> {
+                Log.d(TAG, "moviesDetails= " + movieDetails);
+                    }, e -> Log.e(TAG, "discoverMovies has an error", e)
+            );
+        });
+
         loadMovies(1);
 
         return view;
     }
 
     private void loadMovies(int page) {
-        Maybe<MoviesRemoteResponse> responseMaybe = remoteDataSource.discoverMovies(page).compose(RxUtil.applyMaybeSchedulers());
+        Maybe<MoviesRemoteResponse> responseMaybe =
+                moviesRemoteDataSource.discoverMovies(page).compose(RxUtil.applyMaybeSchedulers());
         responseMaybe.subscribe(resp -> {
                     moviesAdapter.movies.addAll(resp.getResults());
                     totalPages = resp.getTotal_pages();
@@ -84,7 +102,7 @@ public class MovieListFragment extends Fragment {
 
     public void filterMovies(String date, int page) {
         filterDate = date;
-        Maybe<MoviesRemoteResponse> responseMaybe = remoteDataSource.filterMovies(date, page).compose(RxUtil.applyMaybeSchedulers());
+        Maybe<MoviesRemoteResponse> responseMaybe = moviesRemoteDataSource.filterMovies(date, page).compose(RxUtil.applyMaybeSchedulers());
         responseMaybe.subscribe(resp -> {
                     if (page == 1) {
                         moviesAdapter.movies = resp.getResults();
@@ -99,7 +117,8 @@ public class MovieListFragment extends Fragment {
 
     private class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 
-        List<Movies> movies;
+        private List<Movies> movies;
+        private final PublishSubject<Integer> movieIdPublisher = PublishSubject.create();
 
         MoviesAdapter(@NonNull List<Movies> movies) {
             this.movies = movies;
@@ -126,11 +145,24 @@ public class MovieListFragment extends Fragment {
             }
             holder.title.setText(movies.get(position).getTitle());
             holder.releaseDate.setText(movies.get(position).getRelease_date());
+
+            final Integer movieId = movies.get(position).getId();
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    movieIdPublisher.onNext(movieId);
+                }
+            });
+
         }
 
         @Override
         public int getItemCount() {
             return movies.size();
+        }
+
+        public Observable<Integer> getOnClicks() {
+            return movieIdPublisher.hide();
         }
 
         class MoviesViewHolder extends RecyclerView.ViewHolder {

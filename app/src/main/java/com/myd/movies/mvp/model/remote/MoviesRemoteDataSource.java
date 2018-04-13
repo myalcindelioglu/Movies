@@ -15,7 +15,12 @@ import io.reactivex.Maybe;
 public class MoviesRemoteDataSource implements MoviesDataSource {
     @Override
     public Maybe<MoviesRemoteResponse> discoverMovies(int page) {
-        return TmdbServiceHelper.getService().movieDiscoverByReleaseDateDesc(
-                DateUtil.epochToString(System.currentTimeMillis()), page);
+        return filterMovies(DateUtil.epochToString(System.currentTimeMillis()), page);
+    }
+
+    @Override
+    public Maybe<MoviesRemoteResponse> filterMovies(String date, int page) {
+        return TmdbServiceHelper.getService().movieDiscoverFilterReleaseDateDesc(
+                date, page);
     }
 }

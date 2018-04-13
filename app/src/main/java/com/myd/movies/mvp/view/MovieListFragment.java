@@ -17,6 +17,7 @@ import com.myd.movies.R;
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 import com.myd.movies.mvp.model.Movies;
 import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
+import com.myd.movies.util.DateUtil;
 import com.myd.movies.util.RxUtil;
 import com.squareup.picasso.Picasso;
 
@@ -33,6 +34,7 @@ public class MovieListFragment extends Fragment {
     private MoviesAdapter moviesAdapter;
 
     private int totalPages = 0;
+    private String filterDate = "";
 
     public MovieListFragment() {
     }
@@ -55,7 +57,10 @@ public class MovieListFragment extends Fragment {
 
             @Override
             public void onLoadMore(int nextPage) {
-                if (nextPage <= totalPages) loadMovies(nextPage);
+                if (nextPage <= totalPages) {
+                    if (filterDate.isEmpty()) loadMovies(nextPage);
+                    else filterMovies(filterDate, nextPage);
+                }
             }
         });
 
@@ -71,6 +76,21 @@ public class MovieListFragment extends Fragment {
         Maybe<MoviesRemoteResponse> responseMaybe = remoteDataSource.discoverMovies(page).compose(RxUtil.applyMaybeSchedulers());
         responseMaybe.subscribe(resp -> {
                     moviesAdapter.movies.addAll(resp.getResults());
+                    totalPages = resp.getTotal_pages();
+                    moviesAdapter.notifyDataSetChanged();
+                }, e -> Log.e(TAG, "discoverMovies has an error", e)
+        );
+    }
+
+    public void filterMovies(String date, int page) {
+        filterDate = date;
+        Maybe<MoviesRemoteResponse> responseMaybe = remoteDataSource.filterMovies(date, page).compose(RxUtil.applyMaybeSchedulers());
+        responseMaybe.subscribe(resp -> {
+                    if (page == 1) {
+                        moviesAdapter.movies = resp.getResults();
+                    } else {
+                        moviesAdapter.movies.addAll(resp.getResults());
+                    }
                     totalPages = resp.getTotal_pages();
                     moviesAdapter.notifyDataSetChanged();
                 }, e -> Log.e(TAG, "discoverMovies has an error", e)

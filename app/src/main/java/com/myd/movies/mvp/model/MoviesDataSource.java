@@ -11,4 +11,5 @@ import io.reactivex.Maybe;
 
 public interface MoviesDataSource {
     Maybe<MoviesRemoteResponse> discoverMovies(int page);
+    Maybe<MoviesRemoteResponse> filterMovies(String date, int page);
 }

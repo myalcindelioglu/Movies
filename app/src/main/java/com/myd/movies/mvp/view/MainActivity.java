@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +21,11 @@ import com.myd.movies.util.DateUtil;
 
 import java.util.Calendar;
 
+import io.reactivex.disposables.Disposable;
+
 public class MainActivity extends AppCompatActivity {
+
+    private MenuItem filterMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,23 +33,52 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.movies_list_title);
+        subscribeMovieListClicks();
+    }
+
+    private void subscribeMovieListClicks() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
+        if (fragment instanceof MovieListFragment) {
+            MovieListFragment movieListFragment = (MovieListFragment) fragment;
+            Disposable disposable = movieListFragment.getOnClicks().subscribe(
+                    movieId -> {
+                        ActionBar actionBar = getSupportActionBar();
+                        if (actionBar != null) {
+                            actionBar.setDisplayHomeAsUpEnabled(true);
+                        }
+                        if (filterMenu != null) filterMenu.setVisible(false);
+                        MovieDetailsFragment detailsFragment = MovieDetailsFragment.newInstance(movieId);
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment, detailsFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+            );
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        filterMenu = menu.findItem(R.id.action_filter);
         return true;
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        super.onBackPressed();
+        onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
+        if (filterMenu != null) filterMenu.setVisible(true);
+
     }
 
     @Override

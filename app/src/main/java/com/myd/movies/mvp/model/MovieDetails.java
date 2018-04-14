@@ -1,5 +1,7 @@
 package com.myd.movies.mvp.model;
 
+import java.util.List;
+
 /**
  * Created by MYD on 4/11/18.
  *
@@ -9,11 +11,13 @@ public class MovieDetails {
     private int id;
     private String title;
     private String poster_path;
+    private String backdrop_path;
     private String release_date;
     private String original_language;
     private double vote_average;
     private int vote_count;
     private String overview;
+    private List<Genre> genres;
 
     public int getId() {
         return id;
@@ -37,6 +41,14 @@ public class MovieDetails {
 
     public void setPoster_path(String poster_path) {
         this.poster_path = poster_path;
+    }
+
+    public String getBackdrop_path() {
+        return backdrop_path;
+    }
+
+    public void setBackdrop_path(String backdrop_path) {
+        this.backdrop_path = backdrop_path;
     }
 
     public String getRelease_date() {
@@ -79,21 +91,31 @@ public class MovieDetails {
         this.overview = overview;
     }
 
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
     @Override
     public String toString() {
         return "MovieDetails{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", backdrop_path='" + backdrop_path + '\'' +
                 ", poster_path='" + poster_path + '\'' +
                 ", release_date='" + release_date + '\'' +
                 ", original_language='" + original_language + '\'' +
                 ", vote_average=" + vote_average +
                 ", vote_count=" + vote_count +
                 ", overview='" + overview + '\'' +
+                ", genres=" + genres +
                 '}';
     }
 
-    public class Genres {
+    public class Genre {
         private int id;
         private String name;
 
@@ -115,10 +137,7 @@ public class MovieDetails {
 
         @Override
         public String toString() {
-            return "Genres{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
-                    '}';
+            return name;
         }
     }
 }

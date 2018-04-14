@@ -17,14 +17,16 @@ import android.widget.DatePicker;
 
 import com.myd.movies.R;
 import com.myd.movies.mvp.model.Movies;
+import com.myd.movies.mvp.presenter.MainPresenter;
 import com.myd.movies.util.DateUtil;
 
 import java.util.Calendar;
 
 import io.reactivex.disposables.Disposable;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
 
+    private MainPresenter presenter;
     private MenuItem filterMenu;
 
     @Override
@@ -92,6 +94,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void showDetail(int movieId) {
+
+    }
+
+    @Override
+    public void showDatePicker() {
+
+    }
+
+    @Override
+    public void showFilteredMovies(String date) {
+
     }
 
     public static class DatePickerFragment extends DialogFragment

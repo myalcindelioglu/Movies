@@ -1,7 +1,6 @@
 package com.myd.movies.mvp.model.remote;
 
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
-import com.myd.movies.mvp.model.MoviesDataSource;
 import com.myd.movies.util.DateUtil;
 import com.myd.movies.util.TmdbServiceHelper;
 

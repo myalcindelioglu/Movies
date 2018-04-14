@@ -46,4 +46,16 @@ public class MainPresenterTest {
         presenter.handleFilterClick();
         verify(view, times(1)).showDatePicker();
     }
+
+    @Test
+    public void TestHandleBackPress() throws Exception {
+        presenter.handleBackPress();
+        verify(view, times(1)).showMovieList();
+    }
+
+    @Test
+    public void TestSubscribe() throws Exception {
+        presenter.subscribe();
+        verify(view, times(1)).subscribeMovieOnClick();
+    }
 }

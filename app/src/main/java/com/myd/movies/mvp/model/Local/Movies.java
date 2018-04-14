@@ -1,4 +1,4 @@
-package com.myd.movies.mvp.model;
+package com.myd.movies.mvp.model.Local;
 
 import java.util.List;
 

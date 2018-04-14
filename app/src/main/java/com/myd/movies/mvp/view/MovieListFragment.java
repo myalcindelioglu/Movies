@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.myd.movies.BuildConfig;
 import com.myd.movies.R;
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
-import com.myd.movies.mvp.model.Movies;
+import com.myd.movies.mvp.model.Local.Movies;
 import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
 import com.myd.movies.util.RxUtil;
 import com.squareup.picasso.Picasso;

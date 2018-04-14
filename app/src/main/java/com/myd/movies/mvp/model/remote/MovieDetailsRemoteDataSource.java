@@ -1,13 +1,8 @@
 package com.myd.movies.mvp.model.remote;
 
-import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
-import com.myd.movies.mvp.model.MovieDetails;
-import com.myd.movies.mvp.model.MovieDetailsDataSource;
-import com.myd.movies.mvp.model.MoviesDataSource;
-import com.myd.movies.util.DateUtil;
+import com.myd.movies.mvp.model.Local.MovieDetails;
 import com.myd.movies.util.TmdbServiceHelper;
 
-import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 /**

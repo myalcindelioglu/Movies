@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,15 +15,16 @@ import android.view.MenuItem;
 import android.widget.DatePicker;
 
 import com.myd.movies.R;
-import com.myd.movies.mvp.model.Movies;
 import com.myd.movies.mvp.presenter.MainPresenter;
 import com.myd.movies.util.DateUtil;
+import com.myd.movies.util.RxUtil;
 
 import java.util.Calendar;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private MainPresenter presenter;
     private MenuItem filterMenu;
@@ -35,28 +35,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
-        subscribeMovieListClicks();
-    }
-
-    private void subscribeMovieListClicks() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
-        if (fragment instanceof MovieListFragment) {
-            MovieListFragment movieListFragment = (MovieListFragment) fragment;
-            Disposable disposable = movieListFragment.getOnClicks().subscribe(
-                    movieId -> {
-                        ActionBar actionBar = getSupportActionBar();
-                        if (actionBar != null) {
-                            actionBar.setDisplayHomeAsUpEnabled(true);
-                        }
-                        if (filterMenu != null) filterMenu.setVisible(false);
-                        MovieDetailsFragment detailsFragment = MovieDetailsFragment.newInstance(movieId);
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment, detailsFragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                    }
-            );
-        }
+        presenter = new MainPresenter(this);
+        presenter.subscribe();
     }
 
     @Override
@@ -75,12 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false);
-        }
-        if (filterMenu != null) filterMenu.setVisible(true);
-
+       presenter.handleBackPress();
     }
 
     @Override
@@ -88,8 +63,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         int id = item.getItemId();
 
         if (id == R.id.action_filter) {
-            DialogFragment newFragment = new DatePickerFragment();
-            newFragment.show(getSupportFragmentManager(), "datePicker");
+            presenter.handleFilterClick();
             return true;
         }
 
@@ -97,22 +71,67 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void showDetail(int movieId) {
+    protected void onDestroy() {
+        super.onDestroy();
+        RxUtil.unSubscribe(compositeDisposable);
+        presenter.unSubscribe();
+    }
 
+    @Override
+    public void subscribeMovieOnClick() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
+        if (fragment instanceof MovieListFragment) {
+            MovieListFragment movieListFragment = (MovieListFragment) fragment;
+            compositeDisposable.add(movieListFragment.getOnClicks().subscribe(
+                    movieId -> presenter.handleOnMovieClick(movieId)
+                    )
+            );
+        }
+    }
+
+    @Override
+    public void showDetail(int movieId) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        if (filterMenu != null) filterMenu.setVisible(false);
+        MovieDetailsFragment detailsFragment = MovieDetailsFragment.newInstance(movieId);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment, detailsFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
     public void showDatePicker() {
-
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.setPresenter(presenter);
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     @Override
     public void showFilteredMovies(String date) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
+        if (fragment instanceof MovieListFragment) {
+            MovieListFragment listFragment = (MovieListFragment) fragment;
+            listFragment.filterMovies(date, 1);
+        }
+    }
 
+    @Override
+    public void showMovieList() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
+        if (filterMenu != null) filterMenu.setVisible(true);
     }
 
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
+
+        MainPresenter presenter;
 
         @NonNull
         @Override
@@ -129,13 +148,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            if (getActivity() != null) {
-                Fragment fragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment);
-                if (fragment instanceof MovieListFragment) {
-                    MovieListFragment listFragment = (MovieListFragment)fragment;
-                    listFragment.filterMovies(DateUtil.intToString(year, month, day), 1);
-                }
-            }
+            presenter.filterMovies(DateUtil.intToString(year, month, day));
+        }
+
+        public void setPresenter(MainPresenter presenter) {
+            this.presenter = presenter;
         }
     }
 }

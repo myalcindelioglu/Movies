@@ -10,14 +10,18 @@ import com.myd.movies.common.base.BaseView;
 
 public interface MainContract {
     interface View extends BaseView {
+        void subscribeMovieOnClick();
         void showDetail(int movieId);
         void showFilteredMovies(String date);
         void showDatePicker();
+        void showMovieList();
     }
 
     interface Presenter extends BasePresenter {
         void filterMovies(String date);
         void handleOnMovieClick(int movieId);
         void handleFilterClick();
+        void handleBackPress();
+
     }
 }

@@ -1,6 +1,6 @@
 package com.myd.movies.common.data.remote.response;
 
-import com.myd.movies.mvp.model.Movies;
+import com.myd.movies.mvp.model.Local.Movies;
 
 import java.util.List;
 

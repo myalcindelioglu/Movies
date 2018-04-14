@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         MainPresenter presenter;
 
+
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
+
             presenter.filterMovies(DateUtil.intToString(year, month, day));
         }
 

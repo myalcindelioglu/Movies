@@ -1,6 +1,6 @@
 package com.myd.movies.mvp.presenter;
 
-import com.myd.movies.mvp.view.MainContract;
+import com.myd.movies.mvp.MainContract;
 
 /**
  * Created by MYD on 4/14/18.

@@ -34,13 +34,13 @@ public class MainActivityTest {
 
 
     @Test
-    public void TestFragmentVisibility() throws Exception {
+    public void testFragmentVisibility() throws Exception {
         activityTestRule.launchActivity(new Intent());
         onView(withId(R.id.fragment)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void TestDatePicker() throws Exception {
+    public void testDatePicker() throws Exception {
         activityTestRule.launchActivity(new Intent());
         onView(withId(R.id.action_filter)).check(matches(isDisplayed()));
         onView(withId(R.id.action_filter)).perform(click());

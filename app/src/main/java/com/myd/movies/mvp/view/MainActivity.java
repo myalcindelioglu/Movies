@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.DatePicker;
 
 import com.myd.movies.R;
+import com.myd.movies.mvp.MainContract;
 import com.myd.movies.mvp.presenter.MainPresenter;
 import com.myd.movies.util.DateUtil;
 import com.myd.movies.util.RxUtil;
@@ -25,6 +26,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
 
     private MainPresenter presenter;
     private MenuItem filterMenu;

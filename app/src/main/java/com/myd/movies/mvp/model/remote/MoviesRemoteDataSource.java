@@ -1,5 +1,8 @@
 package com.myd.movies.mvp.model.remote;
 
+import android.support.annotation.NonNull;
+
+import com.myd.movies.common.data.remote.TmdbService;
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 import com.myd.movies.util.DateUtil;
 import com.myd.movies.util.TmdbServiceHelper;
@@ -12,6 +15,13 @@ import io.reactivex.Maybe;
  */
 
 public class MoviesRemoteDataSource implements MoviesDataSource {
+
+    private TmdbService tmdbService;
+
+    public MoviesRemoteDataSource(@NonNull TmdbService tmdbService) {
+        this.tmdbService = tmdbService;
+    }
+
     @Override
     public Maybe<MoviesRemoteResponse> discoverMovies(int page) {
         return filterMovies(DateUtil.epochToString(System.currentTimeMillis()), page);
@@ -19,7 +29,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
 
     @Override
     public Maybe<MoviesRemoteResponse> filterMovies(String date, int page) {
-        return TmdbServiceHelper.getService().movieDiscoverFilterReleaseDateDesc(
+        return tmdbService.movieDiscoverFilterReleaseDateDesc(
                 date, page);
     }
 }

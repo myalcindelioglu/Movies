@@ -13,6 +13,16 @@ public class Movies {
     private String poster_path;
     private String release_date;
 
+    public Movies() {
+    }
+
+    public Movies(int id, String title, String poster_path, String release_date) {
+        this.id = id;
+        this.title = title;
+        this.poster_path = poster_path;
+        this.release_date = release_date;
+    }
+
     public int getId() {
         return id;
     }

@@ -16,9 +16,11 @@ import android.widget.TextView;
 import com.myd.movies.BuildConfig;
 import com.myd.movies.R;
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
+import com.myd.movies.mvp.MovieListContract;
 import com.myd.movies.mvp.model.Local.Movies;
 import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
 import com.myd.movies.util.RxUtil;
+import com.myd.movies.util.TmdbServiceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ import java.util.List;
 import io.reactivex.Maybe;
 import io.reactivex.subjects.PublishSubject;
 
-public class MovieListFragment extends Fragment {
+public class MovieListFragment extends Fragment implements MovieListContract.View {
 
     private static final String TAG = "MovieListFragment";
 
@@ -46,7 +48,7 @@ public class MovieListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        moviesRemoteDataSource = new MoviesRemoteDataSource();
+        moviesRemoteDataSource = new MoviesRemoteDataSource(TmdbServiceHelper.getService());
     }
 
     @Override
@@ -74,6 +76,16 @@ public class MovieListFragment extends Fragment {
         loadMovies(1);
 
         return view;
+    }
+
+    @Override
+    public void showProgress(boolean isLoadMore) {
+
+    }
+
+    @Override
+    public void showData(List<Movies> movies) {
+
     }
 
     private void loadMovies(int page) {

@@ -1,4 +1,4 @@
-package com.myd.movies.mvp.view;
+package com.myd.movies.mvp;
 
 import com.myd.movies.common.base.BasePresenter;
 import com.myd.movies.common.base.BaseView;

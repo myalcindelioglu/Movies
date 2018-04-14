@@ -1,6 +1,6 @@
 package com.myd.movies.mvp.presenter;
 
-import com.myd.movies.mvp.view.MainContract;
+import com.myd.movies.mvp.MainContract;
 import com.myd.movies.util.DateUtil;
 
 import org.junit.Before;
@@ -17,6 +17,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
  */
 
 public class MainPresenterTest {
+
     private MainPresenter presenter;
 
     @Mock
@@ -29,32 +30,32 @@ public class MainPresenterTest {
     }
 
     @Test
-    public void TestHandleOnMovieClick() throws Exception{
+    public void testHandleOnMovieClick() throws Exception{
         presenter.handleOnMovieClick(1);
         verify(view, times(1)).showDetail(1);
     }
 
     @Test
-    public void TestFilterMovies() throws Exception {
+    public void testFilterMovies() throws Exception {
         String date = DateUtil.intToString(2017, 4, 13);
         presenter.filterMovies(date);
         verify(view, times(1)).showFilteredMovies(date);
     }
 
     @Test
-    public void TestHandleFilterClick() throws Exception {
+    public void testHandleFilterClick() throws Exception {
         presenter.handleFilterClick();
         verify(view, times(1)).showDatePicker();
     }
 
     @Test
-    public void TestHandleBackPress() throws Exception {
+    public void testHandleBackPress() throws Exception {
         presenter.handleBackPress();
         verify(view, times(1)).showMovieList();
     }
 
     @Test
-    public void TestSubscribe() throws Exception {
+    public void testSubscribe() throws Exception {
         presenter.subscribe();
         verify(view, times(1)).subscribeMovieOnClick();
     }

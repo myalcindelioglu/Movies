@@ -15,6 +15,16 @@ public class MoviesRemoteResponse {
     private int total_pages;
     private List<Movies> results;
 
+    public MoviesRemoteResponse() {
+    }
+
+    public MoviesRemoteResponse(int page, int total_results, int total_pages, List<Movies> results) {
+        this.page = page;
+        this.total_results = total_results;
+        this.total_pages = total_pages;
+        this.results = results;
+    }
+
     public int getPage() {
         return page;
     }

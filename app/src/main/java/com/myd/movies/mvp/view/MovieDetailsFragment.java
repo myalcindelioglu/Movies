@@ -3,41 +3,41 @@ package com.myd.movies.mvp.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.myd.movies.BuildConfig;
 import com.myd.movies.R;
+import com.myd.movies.mvp.MovieDetailContract;
 import com.myd.movies.mvp.model.Local.MovieDetails;
 import com.myd.movies.mvp.model.remote.MovieDetailsDataSource;
 import com.myd.movies.mvp.model.remote.MovieDetailsRemoteDataSource;
-import com.myd.movies.util.RxUtil;
+import com.myd.movies.mvp.presenter.MovieDetailPresenter;
 import com.myd.movies.util.TmdbServiceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
-
-import io.reactivex.Single;
 
 /**
  * Created by MYD on 4/14/18.
  *
  */
 
-public class MovieDetailsFragment extends Fragment {
+public class MovieDetailsFragment extends Fragment implements MovieDetailContract.View {
 
-    private static final String TAG = "MovieDetailsFragment";
     public static final String MOVIE_ID_KEY = "MOVIE_ID";
 
-    private int movieId;
+    private MovieDetailPresenter presenter;
 
-    private MovieDetailsDataSource movieDetailsDataSource;
     private ImageView posterImage;
     private ImageView backdropImage;
     private TextView titleText;
@@ -47,6 +47,11 @@ public class MovieDetailsFragment extends Fragment {
     private TextView rateText;
     private TextView rateCountText;
     private TextView overviewText;
+    private ProgressBar progressBar;
+
+    private View rootView;
+
+    private int movieId;
 
     public MovieDetailsFragment() {
     }
@@ -66,7 +71,9 @@ public class MovieDetailsFragment extends Fragment {
         if (args != null) {
             movieId = args.getInt(MOVIE_ID_KEY, -1);
         }
-        movieDetailsDataSource = new MovieDetailsRemoteDataSource(TmdbServiceHelper.getService());
+        MovieDetailsDataSource dataSource = new MovieDetailsRemoteDataSource(TmdbServiceHelper.getService());
+        presenter = new MovieDetailPresenter(dataSource, this);
+        presenter.subscribe();
     }
 
     @Nullable
@@ -83,21 +90,34 @@ public class MovieDetailsFragment extends Fragment {
         rateText = view.findViewById(R.id.fragment_movie_details_rate_txv);
         rateCountText = view.findViewById(R.id.fragment_movie_details_count_txv);
         overviewText = view.findViewById(R.id.fragment_movie_details_overview_txv);
+        progressBar = view.findViewById(R.id.fragment_movie_details_load_pb);
+        rootView = view.findViewById(R.id.fragment_movie_details_cl);
+
+        presenter.getDetails(movieId);
 
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Single<MovieDetails> movieDetailsSingle =
-                movieDetailsDataSource.getDetails(movieId).compose(RxUtil.applySingleSchedulers());
-        movieDetailsSingle.subscribe(this::loadViews,
-                e -> Log.e(TAG, "discoverMovies has an error", e)
-        );
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.unSubscribe();
     }
 
-    private void loadViews(MovieDetails movieDetails) {
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showError() {
+        progressBar.setVisibility(View.GONE);
+        Snackbar.make(rootView, R.string.network_error_text, BaseTransientBottomBar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void loadViews(MovieDetails movieDetails) {
+        progressBar.setVisibility(View.GONE);
         String posterPath = movieDetails.getPoster_path();
         if (posterPath != null && !posterPath.isEmpty()) {
             Picasso.with(getContext())

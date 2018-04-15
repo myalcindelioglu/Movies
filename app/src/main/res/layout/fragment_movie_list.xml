@@ -39,7 +39,7 @@
         android:layout_height="match_parent"
         android:padding="150dp"
         android:layout_gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         android:clickable="true"
         android:focusable="true" />
 

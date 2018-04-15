@@ -30,8 +30,6 @@ import io.reactivex.subjects.PublishSubject;
 
 public class MovieListFragment extends Fragment implements MovieListContract.View {
 
-    private static final String TAG = "MovieListFragment";
-
     private MovieListPresenter presenter;
 
     private MoviesAdapter moviesAdapter;
@@ -50,6 +48,7 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
         super.onCreate(savedInstanceState);
         MoviesRemoteDataSource moviesRemoteDataSource = new MoviesRemoteDataSource(TmdbServiceHelper.getService());
         presenter = new MovieListPresenter(moviesRemoteDataSource, this);
+        presenter.subscribe();
     }
 
     @Override
@@ -74,6 +73,12 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.unSubscribe();
+    }
+
+    @Override
     public void showProgress(boolean isLoadMore) {
         if (isLoadMore) {
             loadMoreProgress.setVisibility(View.VISIBLE);
@@ -90,8 +95,6 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
         }
         moviesAdapter.movies.addAll(movies);
         moviesAdapter.notifyDataSetChanged();
-
-        recyclerView.scrollToPosition(0);
 
     }
 
@@ -112,6 +115,7 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
 
     public void filterMovies(String date, int page) {
         infiniteScrollListener.reset();
+        recyclerView.scrollToPosition(0);
         presenter.filterMovies(date, page, false);
     }
 

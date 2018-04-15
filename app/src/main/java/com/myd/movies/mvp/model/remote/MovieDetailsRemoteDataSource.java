@@ -2,7 +2,6 @@ package com.myd.movies.mvp.model.remote;
 
 import com.myd.movies.common.data.remote.TmdbService;
 import com.myd.movies.mvp.model.Local.MovieDetails;
-import com.myd.movies.util.TmdbServiceHelper;
 
 import io.reactivex.Single;
 

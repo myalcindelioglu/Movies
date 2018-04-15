@@ -19,6 +19,32 @@ public class MovieDetails {
     private String overview;
     private List<Genre> genres;
 
+
+    public MovieDetails() {
+    }
+
+    public MovieDetails(int id,
+                        String title,
+                        String poster_path,
+                        String backdrop_path,
+                        String release_date,
+                        String original_language,
+                        double vote_average,
+                        int vote_count,
+                        String overview,
+                        List<Genre> genres) {
+        this.id = id;
+        this.title = title;
+        this.poster_path = poster_path;
+        this.backdrop_path = backdrop_path;
+        this.release_date = release_date;
+        this.original_language = original_language;
+        this.vote_average = vote_average;
+        this.vote_count = vote_count;
+        this.overview = overview;
+        this.genres = genres;
+    }
+
     public int getId() {
         return id;
     }
@@ -115,9 +141,17 @@ public class MovieDetails {
                 '}';
     }
 
-    public class Genre {
+    public static class Genre {
         private int id;
         private String name;
+
+        public Genre() {
+        }
+
+        public Genre(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
 
         public int getId() {
             return id;

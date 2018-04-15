@@ -4,6 +4,7 @@ import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 import com.myd.movies.mvp.MovieListContract;
 import com.myd.movies.mvp.model.Local.Movie;
 import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
+import com.myd.movies.util.TestUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,12 +45,9 @@ public class MovieListPresenterTest {
 
     @Test
     public void testDiscoverMovies() throws Exception {
-        Movie movie = new Movie(1, "Batman",
-                "/eLQRLiu4jf4cLPzrp66M4lyDLQe.jpg",
-                "2018-2-27");
-        MoviesRemoteResponse response =
-                new MoviesRemoteResponse(1, 1,
-                        1, Collections.singletonList(movie));
+        String date = "2018-2-27";
+        Movie movie = TestUtil.createMovie(date);
+        MoviesRemoteResponse response = TestUtil.createMoviesRemoteResponse(movie);
 
         when(dataSource.discoverMovies(1)).thenReturn(Maybe.just(response));
         presenter.discoverMovies(1, false);
@@ -59,14 +57,9 @@ public class MovieListPresenterTest {
 
     @Test
     public void testFilterMovies() throws Exception {
-        Movie movie = new Movie(1, "Batman",
-                "/eLQRLiu4jf4cLPzrp66M4lyDLQe.jpg",
-                "2018-2-27");
-        MoviesRemoteResponse response =
-                new MoviesRemoteResponse(1, 1,
-                        1, Collections.singletonList(movie));
-
         String date = "2018-2-27";
+        Movie movie = TestUtil.createMovie(date);
+        MoviesRemoteResponse response = TestUtil.createMoviesRemoteResponse(movie);
 
         when(dataSource.filterMovies(date, 1)).thenReturn(Maybe.just(response));
         presenter.filterMovies(date, 1, false);

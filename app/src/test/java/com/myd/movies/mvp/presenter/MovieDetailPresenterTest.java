@@ -3,6 +3,7 @@ package com.myd.movies.mvp.presenter;
 import com.myd.movies.mvp.MovieDetailContract;
 import com.myd.movies.mvp.model.Local.MovieDetails;
 import com.myd.movies.mvp.model.remote.MovieDetailsDataSource;
+import com.myd.movies.util.TestUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,26 +41,11 @@ public class MovieDetailPresenterTest {
     @Test
     public void testGetDetails() throws Exception {
         int movieId = 1;
-        MovieDetails movieDetails = createMovieDetails(1);
+        MovieDetails movieDetails = TestUtil.createMovieDetails(1);
         Mockito.when(dataSource.getDetails(movieId)).thenReturn(Single.just(movieDetails));
         presenter.getDetails(movieId);
         Mockito.verify(view, Mockito.times(1)).showProgress();
         Mockito.verify(view, Mockito.times(1)).loadViews(movieDetails);
     }
 
-
-    private MovieDetails createMovieDetails(int movieId) {
-        MovieDetails.Genre genre = new MovieDetails.Genre(1, "drama");
-        return new MovieDetails(movieId,
-                "Batman Returns",
-                "/poster.jpg",
-                "backdrop.jpg",
-                "2018-2-13",
-                "en",
-                8.9,
-                1000,
-                "overview text",
-                Collections.singletonList(genre));
-
-    }
 }

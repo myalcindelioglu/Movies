@@ -18,6 +18,7 @@ import com.myd.movies.mvp.model.Local.MovieDetails;
 import com.myd.movies.mvp.model.remote.MovieDetailsDataSource;
 import com.myd.movies.mvp.model.remote.MovieDetailsRemoteDataSource;
 import com.myd.movies.util.RxUtil;
+import com.myd.movies.util.TmdbServiceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
@@ -65,7 +66,7 @@ public class MovieDetailsFragment extends Fragment {
         if (args != null) {
             movieId = args.getInt(MOVIE_ID_KEY, -1);
         }
-        movieDetailsDataSource = new MovieDetailsRemoteDataSource();
+        movieDetailsDataSource = new MovieDetailsRemoteDataSource(TmdbServiceHelper.getService());
     }
 
     @Nullable

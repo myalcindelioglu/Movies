@@ -35,6 +35,21 @@ public class MoviesRemoteDataSourceTest {
     }
 
     @Test
+    public void testDiscoverMovies() throws Exception {
+        Movies movies = new Movies(1, "Batman",
+                "/eLQRLiu4jf4cLPzrp66M4lyDLQe.jpg",
+                "2018-2-27");
+        MoviesRemoteResponse response =
+                new MoviesRemoteResponse(1, 1,
+                        1, Arrays.asList(movies));
+
+        when(service.movieDiscover(1)).thenReturn(Maybe.just(response));
+        TestObserver<MoviesRemoteResponse> testObserver = remoteDataSource.discoverMovies(1).test();
+        testObserver.assertNoErrors();
+        testObserver.assertValue(response);
+    }
+
+    @Test
     public void testFilterMovies() throws Exception {
         Movies movies = new Movies(1, "Batman",
                 "/eLQRLiu4jf4cLPzrp66M4lyDLQe.jpg",

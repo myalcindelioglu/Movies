@@ -36,7 +36,6 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
 
     private MoviesAdapter moviesAdapter;
 
-
     private final PublishSubject<Integer> movieIdPublisher = PublishSubject.create();
     private View loadMoreProgress;
     private View loadProgress;

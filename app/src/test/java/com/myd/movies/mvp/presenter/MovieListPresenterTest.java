@@ -17,6 +17,7 @@ import io.reactivex.Maybe;
 import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.schedulers.Schedulers;
 
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,9 +50,10 @@ public class MovieListPresenterTest {
         MoviesRemoteResponse response = TestUtil.createMoviesRemoteResponse(movie);
 
         when(dataSource.discoverMovies(1)).thenReturn(Maybe.just(response));
+        when(dataSource.filterMovies(date, 1)).thenReturn(Maybe.just(response));
         presenter.discoverMovies(1, false);
         verify(view, times(1)).showProgress(false);
-        verify(view, times(1)).showData(Collections.singletonList(movie), false);
+        verify(view, timeout(400).times(1)).showData(Collections.singletonList(movie), false);
     }
 
     @Test
@@ -63,6 +65,6 @@ public class MovieListPresenterTest {
         when(dataSource.filterMovies(date, 1)).thenReturn(Maybe.just(response));
         presenter.filterMovies(date, 1, false);
         verify(view, times(1)).showProgress(false);
-        verify(view, times(1)).showData(Collections.singletonList(movie), false);
+        verify(view, timeout(400).times(1)).showData(Collections.singletonList(movie), false);
     }
 }

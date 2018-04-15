@@ -42,8 +42,8 @@ public class MovieDetailPresenterTest {
         MovieDetails movieDetails = TestUtil.createMovieDetails(1);
         Mockito.when(dataSource.getDetails(movieId)).thenReturn(Single.just(movieDetails));
         presenter.getDetails(movieId);
-        Mockito.verify(view, Mockito.times(1)).showProgress();
-        Mockito.verify(view, Mockito.times(1)).loadViews(movieDetails);
+        Mockito.verify(view, Mockito.timeout(400).times(1)).showProgress();
+        Mockito.verify(view, Mockito.timeout(400).times(1)).loadViews(movieDetails);
     }
 
 }

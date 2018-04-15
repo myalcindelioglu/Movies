@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.myd.movies.mvp.view.MovieListFragment"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_main"
+    android:background="@android:color/background_dark">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,8 +29,7 @@
             android:layout_weight="0"
             android:visibility="gone"
             android:clickable="true"
-            android:focusable="true"
-            android:background="@color/colorPrimaryDark"/>
+            android:focusable="true" />
     </LinearLayout>
 
 

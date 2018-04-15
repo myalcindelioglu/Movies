@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@android:color/background_dark">
+    android:orientation="horizontal">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/fragment_movie_list_item_movies_poster_cl"

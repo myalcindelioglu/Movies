@@ -92,6 +92,8 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
         moviesAdapter.movies.addAll(movies);
         moviesAdapter.notifyDataSetChanged();
 
+        recyclerView.scrollToPosition(0);
+
     }
 
     @Override
@@ -110,6 +112,7 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
     }
 
     public void filterMovies(String date, int page) {
+        infiniteScrollListener.reset();
         presenter.filterMovies(date, page, false);
     }
 

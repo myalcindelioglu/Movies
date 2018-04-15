@@ -85,6 +85,13 @@ public abstract class InfiniteScrollListener extends RecyclerView.OnScrollListen
         return maxSize;
     }
 
+    void reset() {
+        lastTotalItemCount = 0;
+        lastPage = initialPage;
+        currentPage = initialPage;
+        loading = true;
+    }
+
     void onLoadError() {
         currentPage = lastPage;
         loading = false;

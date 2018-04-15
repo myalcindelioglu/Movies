@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,30 +14,26 @@ import android.widget.TextView;
 
 import com.myd.movies.BuildConfig;
 import com.myd.movies.R;
-import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 import com.myd.movies.mvp.MovieListContract;
 import com.myd.movies.mvp.model.Local.Movies;
 import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
-import com.myd.movies.util.RxUtil;
+import com.myd.movies.mvp.presenter.MovieListPresenter;
 import com.myd.movies.util.TmdbServiceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Maybe;
 import io.reactivex.subjects.PublishSubject;
 
 public class MovieListFragment extends Fragment implements MovieListContract.View {
 
     private static final String TAG = "MovieListFragment";
 
-    private MoviesRemoteDataSource moviesRemoteDataSource;
+    private MovieListPresenter presenter;
 
     private MoviesAdapter moviesAdapter;
 
-    private int totalPages = 0;
-    private String filterDate = "";
 
     private final PublishSubject<Integer> movieIdPublisher = PublishSubject.create();
 
@@ -48,7 +43,8 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        moviesRemoteDataSource = new MoviesRemoteDataSource(TmdbServiceHelper.getService());
+        MoviesRemoteDataSource moviesRemoteDataSource = new MoviesRemoteDataSource(TmdbServiceHelper.getService());
+        presenter = new MovieListPresenter(moviesRemoteDataSource, this);
     }
 
     @Override
@@ -63,17 +59,14 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
 
             @Override
             public void onLoadMore(int nextPage) {
-                if (nextPage <= totalPages) {
-                    if (filterDate.isEmpty()) loadMovies(nextPage);
-                    else filterMovies(filterDate, nextPage);
-                }
+                presenter.discoverMovies(nextPage, true);
             }
         });
 
         moviesAdapter = new MoviesAdapter(new ArrayList<>());
         recyclerView.setAdapter(moviesAdapter);
 
-        loadMovies(1);
+        presenter.discoverMovies(1, false);
 
         return view;
     }
@@ -84,34 +77,22 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
     }
 
     @Override
-    public void showData(List<Movies> movies) {
+    public void showData(List<Movies> movies, boolean isLoadMore) {
+        hideProgress(isLoadMore);
+        if (!isLoadMore) {
+            moviesAdapter.movies.clear();
+        }
+        moviesAdapter.movies.addAll(movies);
+        moviesAdapter.notifyDataSetChanged();
 
     }
 
-    private void loadMovies(int page) {
-        Maybe<MoviesRemoteResponse> responseMaybe =
-                moviesRemoteDataSource.discoverMovies(page).compose(RxUtil.applyMaybeSchedulers());
-        responseMaybe.subscribe(resp -> {
-                    moviesAdapter.movies.addAll(resp.getResults());
-                    totalPages = resp.getTotal_pages();
-                    moviesAdapter.notifyDataSetChanged();
-                }, e -> Log.e(TAG, "discoverMovies has an error", e)
-        );
+    private void hideProgress(boolean isLoadMore) {
+
     }
 
     public void filterMovies(String date, int page) {
-        filterDate = date;
-        Maybe<MoviesRemoteResponse> responseMaybe = moviesRemoteDataSource.filterMovies(date, page).compose(RxUtil.applyMaybeSchedulers());
-        responseMaybe.subscribe(resp -> {
-                    if (page == 1) {
-                        moviesAdapter.movies = resp.getResults();
-                    } else {
-                        moviesAdapter.movies.addAll(resp.getResults());
-                    }
-                    totalPages = resp.getTotal_pages();
-                    moviesAdapter.notifyDataSetChanged();
-                }, e -> Log.e(TAG, "discoverMovies has an error", e)
-        );
+        presenter.filterMovies(date, page, false);
     }
 
     public PublishSubject<Integer> getOnClicks() {

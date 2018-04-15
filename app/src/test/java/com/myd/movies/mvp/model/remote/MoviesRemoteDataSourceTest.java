@@ -9,12 +9,12 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
 
 import io.reactivex.Maybe;
 import io.reactivex.observers.TestObserver;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Created by MYD on 4/15/18.

@@ -13,6 +13,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 
 import io.reactivex.Maybe;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,11 +38,12 @@ public class MovieListPresenterTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
         presenter = new MovieListPresenter(dataSource, view);
     }
 
     @Test
-    public void testLoadMovies() throws Exception {
+    public void testDiscoverMovies() throws Exception {
         Movies movies = new Movies(1, "Batman",
                 "/eLQRLiu4jf4cLPzrp66M4lyDLQe.jpg",
                 "2018-2-27");
@@ -49,9 +52,9 @@ public class MovieListPresenterTest {
                         1, Arrays.asList(movies));
 
         when(dataSource.discoverMovies(1)).thenReturn(Maybe.just(response));
-        presenter.loadMovies(1);
+        presenter.discoverMovies(1, false);
         verify(view, times(1)).showProgress(false);
-        verify(view, times(1)).showData(Arrays.asList(movies));
+        verify(view, times(1)).showData(Arrays.asList(movies), false);
     }
 
     @Test
@@ -66,8 +69,8 @@ public class MovieListPresenterTest {
         String date = "2018-2-27";
 
         when(dataSource.filterMovies(date, 1)).thenReturn(Maybe.just(response));
-        presenter.filterMovies(date, 1);
+        presenter.filterMovies(date, 1, false);
         verify(view, times(1)).showProgress(false);
-        verify(view, times(1)).showData(Arrays.asList(movies));
+        verify(view, times(1)).showData(Arrays.asList(movies), false);
     }
 }

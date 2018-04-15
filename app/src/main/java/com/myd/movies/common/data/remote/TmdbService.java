@@ -16,6 +16,9 @@ import retrofit2.http.Query;
 
 public interface TmdbService {
     @GET("discover/movie?sort_by=release_date.desc")
+    Maybe<MoviesRemoteResponse> movieDiscover(@Query("page") int page);
+
+    @GET("discover/movie?sort_by=release_date.desc")
     Maybe<MoviesRemoteResponse> movieDiscoverFilterReleaseDateDesc(
             @Query("release_date.lte") String date, @Query("page") int page);
 

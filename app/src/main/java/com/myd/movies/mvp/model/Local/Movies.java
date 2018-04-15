@@ -1,7 +1,5 @@
 package com.myd.movies.mvp.model.Local;
 
-import java.util.List;
-
 /**
  * Created by MYD on 4/11/18.
  *

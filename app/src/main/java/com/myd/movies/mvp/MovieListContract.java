@@ -1,5 +1,7 @@
 package com.myd.movies.mvp;
 
+import android.support.annotation.NonNull;
+
 import com.myd.movies.common.base.BasePresenter;
 import com.myd.movies.common.base.BaseView;
 import com.myd.movies.mvp.model.Local.Movies;
@@ -14,11 +16,11 @@ import java.util.List;
 public interface MovieListContract {
     interface View extends BaseView {
         void showProgress(boolean isLoadMore);
-        void showData(List<Movies> movies);
+        void showData(List<Movies> movies, boolean isLoadMore);
     }
 
     interface Presenter extends BasePresenter {
-        void loadMovies(int nextPage);
-        void filterMovies(String filterDate, int nextPage);
+        void discoverMovies(int nextPage, boolean isLoadMore);
+        void filterMovies(@NonNull String filterDate, int nextPage, boolean isLoadMore);
     }
 }

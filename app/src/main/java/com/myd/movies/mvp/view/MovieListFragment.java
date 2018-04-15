@@ -36,6 +36,8 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
 
 
     private final PublishSubject<Integer> movieIdPublisher = PublishSubject.create();
+    private View loadMoreProgress;
+    private View loadProgress;
 
     public MovieListFragment() {
     }
@@ -52,6 +54,8 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
 
+        loadMoreProgress = view.findViewById(R.id.fragment_movie_list_load_more_pb);
+        loadProgress = view.findViewById(R.id.fragment_movie_list_load_pb);
         RecyclerView recyclerView = view.findViewById(R.id.fragment_movie_list_rcv);
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -73,7 +77,11 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
 
     @Override
     public void showProgress(boolean isLoadMore) {
-
+        if (isLoadMore) {
+            loadMoreProgress.setVisibility(View.VISIBLE);
+        } else {
+            loadProgress.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -88,7 +96,11 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
     }
 
     private void hideProgress(boolean isLoadMore) {
-
+        if (isLoadMore) {
+            loadMoreProgress.setVisibility(View.GONE);
+        } else {
+            loadProgress.setVisibility(View.GONE);
+        }
     }
 
     public void filterMovies(String date, int page) {
@@ -121,11 +133,9 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
         public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
 
             String posterPath = movies.get(position).getPoster_path();
-            if (posterPath != null && !posterPath.isEmpty()) {
-                Picasso.with(getContext())
-                        .load(BuildConfig.TMDB_SECURE_IMAGE_URL + "w500" + posterPath)
-                        .into(holder.poster);
-            }
+            Picasso.with(getContext())
+                    .load(BuildConfig.TMDB_SECURE_IMAGE_URL + "w500" + posterPath)
+                    .into(holder.poster);
             holder.title.setText(movies.get(position).getTitle());
             holder.releaseDate.setText(movies.get(position).getRelease_date());
 

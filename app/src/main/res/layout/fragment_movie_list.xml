@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.myd.movies.mvp.view.MovieListFragment"
     tools:showIn="@layout/activity_main">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_movie_list_rcv"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_movie_list_rcv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-    </android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
+        <ProgressBar
+            android:id="@+id/fragment_movie_list_load_more_pb"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@color/colorPrimaryDark"/>
+    </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/fragment_movie_list_load_pb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="150dp"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        android:clickable="true"
+        android:focusable="true" />
+
+</android.support.design.widget.CoordinatorLayout>

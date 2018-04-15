@@ -17,6 +17,7 @@ public interface MovieListContract {
     interface View extends BaseView {
         void showProgress(boolean isLoadMore);
         void showData(List<Movies> movies, boolean isLoadMore);
+        void showError(boolean isLoadMore);
     }
 
     interface Presenter extends BasePresenter {

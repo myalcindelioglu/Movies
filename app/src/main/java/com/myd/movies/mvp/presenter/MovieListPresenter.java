@@ -46,20 +46,14 @@ public class MovieListPresenter implements MovieListContract.Presenter {
         view.showProgress(isLoadMore);
 
         Maybe<MoviesRemoteResponse> responseMaybe;
-        if (this.filterDate .isEmpty()) {
+        if (this.filterDate.isEmpty()) {
             responseMaybe = moviesRemoteDataSource.discoverMovies(nextPage).compose(RxUtil.applyMaybeSchedulers());
         } else {
             responseMaybe = moviesRemoteDataSource.filterMovies(filterDate, nextPage).compose(RxUtil.applyMaybeSchedulers());
 
         }
 
-        Disposable disposable = responseMaybe.subscribe(resp -> {
-                    view.showData(resp.getResults(), isLoadMore);
-                    totalPages = resp.getTotal_pages();
-                }, e -> Log.e(TAG, "discoverMovies has an error", e)
-        );
-
-        subscriptions.add(disposable);
+        subscribeResponse(responseMaybe, isLoadMore);
 
     }
 
@@ -77,14 +71,22 @@ public class MovieListPresenter implements MovieListContract.Presenter {
                 moviesRemoteDataSource.filterMovies(filterDate, nextPage)
                         .compose(RxUtil.applyMaybeSchedulers());
 
+        subscribeResponse(responseMaybe, isLoadMore);
+
+    }
+
+    private void subscribeResponse(Maybe<MoviesRemoteResponse> responseMaybe, boolean isLoadMore) {
         Disposable disposable = responseMaybe.subscribe(resp -> {
+                    Log.d(TAG, resp.getResults().toString() + " totalPages = " + totalPages);
                     view.showData(resp.getResults(), isLoadMore);
                     totalPages = resp.getTotal_pages();
-                }, e -> Log.e(TAG, "discoverMovies has an error", e)
+                }, e -> {
+                    Log.e(TAG, "filterDate isEmpty = " + filterDate.isEmpty() + " discoverMovies has an error", e);
+                    view.showError(isLoadMore);
+                }
         );
 
         subscriptions.add(disposable);
-
     }
 
     @Override

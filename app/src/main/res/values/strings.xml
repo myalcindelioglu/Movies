@@ -3,4 +3,5 @@
     <string name="action_filter">Filter By Date</string>
     <string name="poster_question_mark">\?</string>
     <string name="movie_detail_rate">%1$.1f/10</string>
+    <string name="network_error_text">Can\'t load data</string>
 </resources>

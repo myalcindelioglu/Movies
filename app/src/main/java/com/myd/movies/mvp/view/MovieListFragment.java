@@ -3,6 +3,8 @@ package com.myd.movies.mvp.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +40,8 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
     private final PublishSubject<Integer> movieIdPublisher = PublishSubject.create();
     private View loadMoreProgress;
     private View loadProgress;
+    private RecyclerView recyclerView;
+    private InfiniteScrollListenerImpl infiniteScrollListener;
 
     public MovieListFragment() {
     }
@@ -56,16 +60,11 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
 
         loadMoreProgress = view.findViewById(R.id.fragment_movie_list_load_more_pb);
         loadProgress = view.findViewById(R.id.fragment_movie_list_load_pb);
-        RecyclerView recyclerView = view.findViewById(R.id.fragment_movie_list_rcv);
+        recyclerView = view.findViewById(R.id.fragment_movie_list_rcv);
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addOnScrollListener(new InfiniteScrollListener(linearLayoutManager) {
-
-            @Override
-            public void onLoadMore(int nextPage) {
-                presenter.discoverMovies(nextPage, true);
-            }
-        });
+        infiniteScrollListener = new InfiniteScrollListenerImpl(linearLayoutManager);
+        recyclerView.addOnScrollListener(infiniteScrollListener);
 
         moviesAdapter = new MoviesAdapter(new ArrayList<>());
         recyclerView.setAdapter(moviesAdapter);
@@ -95,6 +94,13 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
 
     }
 
+    @Override
+    public void showError(boolean isLoadMore) {
+        infiniteScrollListener.onLoadError();
+        hideProgress(isLoadMore);
+        Snackbar.make(recyclerView, R.string.network_error_text, BaseTransientBottomBar.LENGTH_LONG).show();
+    }
+
     private void hideProgress(boolean isLoadMore) {
         if (isLoadMore) {
             loadMoreProgress.setVisibility(View.GONE);
@@ -109,6 +115,18 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
 
     public PublishSubject<Integer> getOnClicks() {
         return movieIdPublisher;
+    }
+
+    public class InfiniteScrollListenerImpl extends InfiniteScrollListener {
+
+        InfiniteScrollListenerImpl(RecyclerView.LayoutManager layoutManager) {
+            super(layoutManager);
+        }
+
+        @Override
+        public void onLoadMore(int nextPage) {
+            presenter.discoverMovies(nextPage, true);
+        }
     }
 
     private class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {

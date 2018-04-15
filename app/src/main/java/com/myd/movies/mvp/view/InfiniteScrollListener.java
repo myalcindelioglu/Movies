@@ -15,6 +15,7 @@ public abstract class InfiniteScrollListener extends RecyclerView.OnScrollListen
     private int threshold;
     private int currentPage;
     private int lastTotalItemCount = 0;
+    private int lastPage;
     private int initialPage = 1;
 
     private boolean loading = true;
@@ -31,6 +32,7 @@ public abstract class InfiniteScrollListener extends RecyclerView.OnScrollListen
                                    int currentPage) {
         this.layoutManager = layoutManager;
         this.threshold = threshold;
+        this.lastPage = currentPage;
         this.currentPage = currentPage;
         this.initialPage = currentPage;
     }
@@ -63,7 +65,7 @@ public abstract class InfiniteScrollListener extends RecyclerView.OnScrollListen
         }
 
         if (!loading && (lastVisibleItemPosition + threshold) > totalItemCount) {
-            currentPage++;
+            lastPage = currentPage++;
             onLoadMore(currentPage);
             loading = true;
         }
@@ -81,6 +83,11 @@ public abstract class InfiniteScrollListener extends RecyclerView.OnScrollListen
             }
         }
         return maxSize;
+    }
+
+    void onLoadError() {
+        currentPage = lastPage;
+        loading = false;
     }
 
     public abstract void onLoadMore(int nextPage);

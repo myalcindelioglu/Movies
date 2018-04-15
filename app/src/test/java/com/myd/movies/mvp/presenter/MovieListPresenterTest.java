@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
  * Created by MYD on 4/14/18.
  *
  */
-
 public class MovieListPresenterTest {
 
     private MovieListPresenter presenter;

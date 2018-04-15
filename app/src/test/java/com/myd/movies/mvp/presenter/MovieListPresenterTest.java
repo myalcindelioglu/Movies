@@ -2,7 +2,7 @@ package com.myd.movies.mvp.presenter;
 
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 import com.myd.movies.mvp.MovieListContract;
-import com.myd.movies.mvp.model.Local.Movies;
+import com.myd.movies.mvp.model.Local.Movie;
 import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
 
 import org.junit.Before;
@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import io.reactivex.Maybe;
 import io.reactivex.android.plugins.RxAndroidPlugins;
@@ -43,33 +44,33 @@ public class MovieListPresenterTest {
 
     @Test
     public void testDiscoverMovies() throws Exception {
-        Movies movies = new Movies(1, "Batman",
+        Movie movie = new Movie(1, "Batman",
                 "/eLQRLiu4jf4cLPzrp66M4lyDLQe.jpg",
                 "2018-2-27");
         MoviesRemoteResponse response =
                 new MoviesRemoteResponse(1, 1,
-                        1, Arrays.asList(movies));
+                        1, Collections.singletonList(movie));
 
         when(dataSource.discoverMovies(1)).thenReturn(Maybe.just(response));
         presenter.discoverMovies(1, false);
         verify(view, times(1)).showProgress(false);
-        verify(view, times(1)).showData(Arrays.asList(movies), false);
+        verify(view, times(1)).showData(Collections.singletonList(movie), false);
     }
 
     @Test
     public void testFilterMovies() throws Exception {
-        Movies movies = new Movies(1, "Batman",
+        Movie movie = new Movie(1, "Batman",
                 "/eLQRLiu4jf4cLPzrp66M4lyDLQe.jpg",
                 "2018-2-27");
         MoviesRemoteResponse response =
                 new MoviesRemoteResponse(1, 1,
-                        1, Arrays.asList(movies));
+                        1, Collections.singletonList(movie));
 
         String date = "2018-2-27";
 
         when(dataSource.filterMovies(date, 1)).thenReturn(Maybe.just(response));
         presenter.filterMovies(date, 1, false);
         verify(view, times(1)).showProgress(false);
-        verify(view, times(1)).showData(Arrays.asList(movies), false);
+        verify(view, times(1)).showData(Collections.singletonList(movie), false);
     }
 }

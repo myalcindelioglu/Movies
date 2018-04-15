@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.myd.movies.BuildConfig;
 import com.myd.movies.R;
 import com.myd.movies.mvp.MovieListContract;
-import com.myd.movies.mvp.model.Local.Movies;
+import com.myd.movies.mvp.model.Local.Movie;
 import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
 import com.myd.movies.mvp.presenter.MovieListPresenter;
 import com.myd.movies.util.TmdbServiceHelper;
@@ -83,7 +83,7 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
     }
 
     @Override
-    public void showData(List<Movies> movies, boolean isLoadMore) {
+    public void showData(List<Movie> movies, boolean isLoadMore) {
         hideProgress(isLoadMore);
         if (!isLoadMore) {
             moviesAdapter.movies.clear();
@@ -133,9 +133,9 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
 
     private class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 
-        private List<Movies> movies;
+        private List<Movie> movies;
 
-        MoviesAdapter(@NonNull List<Movies> movies) {
+        MoviesAdapter(@NonNull List<Movie> movies) {
             this.movies = movies;
         }
 

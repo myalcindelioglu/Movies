@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.myd.movies.common.base.BasePresenter;
 import com.myd.movies.common.base.BaseView;
-import com.myd.movies.mvp.model.Local.Movies;
+import com.myd.movies.mvp.model.Local.Movie;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public interface MovieListContract {
     interface View extends BaseView {
         void showProgress(boolean isLoadMore);
-        void showData(List<Movies> movies, boolean isLoadMore);
+        void showData(List<Movie> movies, boolean isLoadMore);
         void showError(boolean isLoadMore);
     }
 

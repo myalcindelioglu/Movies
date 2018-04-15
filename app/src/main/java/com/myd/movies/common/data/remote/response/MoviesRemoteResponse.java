@@ -1,6 +1,6 @@
 package com.myd.movies.common.data.remote.response;
 
-import com.myd.movies.mvp.model.Local.Movies;
+import com.myd.movies.mvp.model.Local.Movie;
 
 import java.util.List;
 
@@ -13,12 +13,12 @@ public class MoviesRemoteResponse {
     private int page;
     private int total_results;
     private int total_pages;
-    private List<Movies> results;
+    private List<Movie> results;
 
     public MoviesRemoteResponse() {
     }
 
-    public MoviesRemoteResponse(int page, int total_results, int total_pages, List<Movies> results) {
+    public MoviesRemoteResponse(int page, int total_results, int total_pages, List<Movie> results) {
         this.page = page;
         this.total_results = total_results;
         this.total_pages = total_pages;
@@ -49,11 +49,11 @@ public class MoviesRemoteResponse {
         this.total_pages = total_pages;
     }
 
-    public List<Movies> getResults() {
+    public List<Movie> getResults() {
         return results;
     }
 
-    public void setResults(List<Movies> results) {
+    public void setResults(List<Movie> results) {
         this.results = results;
     }
 

@@ -5,16 +5,16 @@ package com.myd.movies.mvp.model.Local;
  *
  */
 
-public class Movies {
+public class Movie {
     private int id;
     private String title;
     private String poster_path;
     private String release_date;
 
-    public Movies() {
+    public Movie() {
     }
 
-    public Movies(int id, String title, String poster_path, String release_date) {
+    public Movie(int id, String title, String poster_path, String release_date) {
         this.id = id;
         this.title = title;
         this.poster_path = poster_path;
@@ -55,7 +55,7 @@ public class Movies {
 
     @Override
     public String toString() {
-        return "Movies{" +
+        return "Movie{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", poster_path='" + poster_path + '\'' +

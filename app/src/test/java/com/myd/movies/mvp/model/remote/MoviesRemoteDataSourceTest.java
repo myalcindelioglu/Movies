@@ -2,7 +2,7 @@ package com.myd.movies.mvp.model.remote;
 
 import com.myd.movies.common.data.remote.TmdbService;
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
-import com.myd.movies.mvp.model.Local.Movies;
+import com.myd.movies.mvp.model.Local.Movie;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import io.reactivex.Maybe;
 import io.reactivex.observers.TestObserver;
@@ -36,12 +37,12 @@ public class MoviesRemoteDataSourceTest {
 
     @Test
     public void testDiscoverMovies() throws Exception {
-        Movies movies = new Movies(1, "Batman",
+        Movie movie = new Movie(1, "Batman",
                 "/eLQRLiu4jf4cLPzrp66M4lyDLQe.jpg",
                 "2018-2-27");
         MoviesRemoteResponse response =
                 new MoviesRemoteResponse(1, 1,
-                        1, Arrays.asList(movies));
+                        1, Collections.singletonList(movie));
 
         when(service.movieDiscover(1)).thenReturn(Maybe.just(response));
         TestObserver<MoviesRemoteResponse> testObserver = remoteDataSource.discoverMovies(1).test();
@@ -51,12 +52,12 @@ public class MoviesRemoteDataSourceTest {
 
     @Test
     public void testFilterMovies() throws Exception {
-        Movies movies = new Movies(1, "Batman",
+        Movie movie = new Movie(1, "Batman",
                 "/eLQRLiu4jf4cLPzrp66M4lyDLQe.jpg",
                 "2018-2-27");
         MoviesRemoteResponse response =
                 new MoviesRemoteResponse(1, 1,
-                        1, Arrays.asList(movies));
+                        1, Collections.singletonList(movie));
 
         String date = "2018-2-27";
         when(service.movieDiscoverFilterReleaseDateDesc(date, 1)).thenReturn(Maybe.just(response));

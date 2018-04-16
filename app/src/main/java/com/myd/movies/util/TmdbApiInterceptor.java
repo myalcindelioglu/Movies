@@ -26,7 +26,6 @@ public class TmdbApiInterceptor implements Interceptor {
                 .addQueryParameter("api_key", BuildConfig.API_KEY)
                 .build();
 
-        // Request customization: add request headers
         Request.Builder requestBuilder = original.newBuilder()
                 .url(url);
 

@@ -7,10 +7,10 @@ import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.myd.movies.BuildConfig;
 import com.myd.movies.common.data.remote.TmdbService;
+import com.myd.movies.mvp.model.remote.FakeDetailsDataSource;
+import com.myd.movies.mvp.model.remote.FakeMovieDataSource;
 import com.myd.movies.mvp.model.remote.MovieDetailsDataSource;
-import com.myd.movies.mvp.model.remote.MovieDetailsRemoteDataSource;
 import com.myd.movies.mvp.model.remote.MoviesDataSource;
-import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
 import com.myd.movies.util.TmdbApiInterceptor;
 
 import java.util.concurrent.TimeUnit;
@@ -29,14 +29,14 @@ public class TmdbSourceModule {
 
     @Singleton
     @Provides
-    MoviesDataSource provideMoviesDataSource(TmdbService serverInterface) {
-        return new MoviesRemoteDataSource(serverInterface);
+    MoviesDataSource provideMoviesDataSource() {
+        return new FakeMovieDataSource();
     }
 
     @Singleton
     @Provides
-    MovieDetailsDataSource provideMoviesDetailDataSource(TmdbService serverInterface) {
-        return new MovieDetailsRemoteDataSource(serverInterface);
+    MovieDetailsDataSource provideMoviesDetailDataSource() {
+        return new FakeDetailsDataSource();
     }
 
     @Provides

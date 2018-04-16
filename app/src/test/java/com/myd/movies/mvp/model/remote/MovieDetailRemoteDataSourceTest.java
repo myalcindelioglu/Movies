@@ -1,6 +1,7 @@
 package com.myd.movies.mvp.model.remote;
 
 import com.myd.movies.common.data.remote.TmdbService;
+import com.myd.movies.mvp.model.Local.Movie;
 import com.myd.movies.mvp.model.Local.MovieDetails;
 import com.myd.movies.util.TestUtil;
 
@@ -33,10 +34,10 @@ public class MovieDetailRemoteDataSourceTest {
     @Test
     public void testGetDetails() throws Exception {
 
-        int movieId = 1;
-        MovieDetails movieDetails = TestUtil.createMovieDetails(movieId);
-        Mockito.when(tmdbService.getMovieDetails(movieId)).thenReturn(Single.just(movieDetails));
-        TestObserver<MovieDetails> test = dataSource.getDetails(movieId).test();
+        Movie movie = TestUtil.createMovie(1, "2018-04-12");
+        MovieDetails movieDetails = TestUtil.createMovieDetails(movie);
+        Mockito.when(tmdbService.getMovieDetails(movie.getId())).thenReturn(Single.just(movieDetails));
+        TestObserver<MovieDetails> test = dataSource.getDetails(movie.getId()).test();
         test.assertNoErrors();
         test.assertValue(movieDetails);
     }

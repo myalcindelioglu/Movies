@@ -36,7 +36,7 @@ public class MoviesRemoteDataSourceTest {
     @Test
     public void testDiscoverMovies() throws Exception {
         String date = "2018-2-27";
-        Movie movie = TestUtil.createMovie(date);
+        Movie movie = TestUtil.createMovie(1, date);
         MoviesRemoteResponse response = TestUtil.createMoviesRemoteResponse(movie);
 
         when(service.movieDiscover(1)).thenReturn(Maybe.just(response));
@@ -48,7 +48,7 @@ public class MoviesRemoteDataSourceTest {
     @Test
     public void testFilterMovies() throws Exception {
         String date = "2018-2-27";
-        Movie movie = TestUtil.createMovie(date);
+        Movie movie = TestUtil.createMovie(1, date);
         MoviesRemoteResponse response = TestUtil.createMoviesRemoteResponse(movie);
 
         when(service.movieDiscoverFilterReleaseDateDesc(date, 1)).thenReturn(Maybe.just(response));

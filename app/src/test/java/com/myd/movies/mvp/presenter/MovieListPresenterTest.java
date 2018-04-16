@@ -47,7 +47,7 @@ public class MovieListPresenterTest {
     @Test
     public void testDiscoverMovies() throws Exception {
         String date = "2018-2-27";
-        Movie movie = TestUtil.createMovie(date);
+        Movie movie = TestUtil.createMovie(1, date);
         MoviesRemoteResponse response = TestUtil.createMoviesRemoteResponse(movie);
 
         when(dataSource.discoverMovies(1)).thenReturn(Maybe.just(response));
@@ -60,7 +60,7 @@ public class MovieListPresenterTest {
     @Test
     public void testFilterMovies() throws Exception {
         String date = "2018-2-27";
-        Movie movie = TestUtil.createMovie(date);
+        Movie movie = TestUtil.createMovie(1, date);
         MoviesRemoteResponse response = TestUtil.createMoviesRemoteResponse(movie);
 
         when(dataSource.filterMovies(date, 1)).thenReturn(Maybe.just(response));
@@ -72,7 +72,7 @@ public class MovieListPresenterTest {
     @Test
     public void testSubscribeResponse() throws Exception {
         String date = "2018-2-27";
-        Movie movie = TestUtil.createMovie(date);
+        Movie movie = TestUtil.createMovie(1, date);
         MoviesRemoteResponse testResponse = TestUtil.createMoviesRemoteResponse(movie);
 
         presenter.subscribeResponse(Maybe.just(testResponse), false);

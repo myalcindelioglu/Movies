@@ -57,7 +57,6 @@ public class MainPresenterTest {
 
     @Test
     public void testSubscribe() throws Exception {
-        presenter.subscribe(view);
         verify(view, times(1)).subscribeMovieOnClick();
     }
 }

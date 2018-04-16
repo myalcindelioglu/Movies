@@ -27,13 +27,14 @@ android {
         }
     }
     productFlavors {
-        dev {
+
+        prod{
             buildConfigField "String", "API_KEY", "\"aa415ab8634b9afc9233b1114ce8bfe8\""
             buildConfigField "String", "TMDB_SECURE_BASE_URL", "\"https://api.themoviedb.org/3/\""
             buildConfigField "String", "TMDB_SECURE_IMAGE_URL", "\"https://image.tmdb.org/t/p/\""
         }
 
-        prod{
+        stub {
             buildConfigField "String", "API_KEY", "\"aa415ab8634b9afc9233b1114ce8bfe8\""
             buildConfigField "String", "TMDB_SECURE_BASE_URL", "\"https://api.themoviedb.org/3/\""
             buildConfigField "String", "TMDB_SECURE_IMAGE_URL", "\"https://image.tmdb.org/t/p/\""

@@ -41,7 +41,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void subscribe(MainContract.View view) {
         this.view = view;
-        view.subscribeMovieOnClick();
+        this.view.subscribeMovieOnClick();
     }
 
     @Override

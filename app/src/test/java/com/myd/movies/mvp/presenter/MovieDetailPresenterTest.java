@@ -40,7 +40,7 @@ public class MovieDetailPresenterTest {
     @Test
     public void testGetDetails() throws Exception {
         int movieId = 1;
-        MovieDetails movieDetails = TestUtil.createMovieDetails(1);
+        MovieDetails movieDetails = TestUtil.createMovieDetails(TestUtil.createMovie(movieId, "2017-12-1"));
         Mockito.when(dataSource.getDetails(movieId)).thenReturn(Single.just(movieDetails));
         presenter.getDetails(movieId);
         Mockito.verify(view, Mockito.timeout(400).times(1)).showProgress();

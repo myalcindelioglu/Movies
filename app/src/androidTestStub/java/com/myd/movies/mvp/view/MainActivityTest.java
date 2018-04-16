@@ -8,7 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.widget.DatePicker;
 
 import com.myd.movies.R;
-import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
+import com.myd.movies.mvp.model.remote.MoviesRemoteResponse;
 import com.myd.movies.mvp.model.Local.Movie;
 import com.myd.movies.mvp.model.remote.FakeDetailsDataSource;
 import com.myd.movies.mvp.model.remote.FakeMovieDataSource;

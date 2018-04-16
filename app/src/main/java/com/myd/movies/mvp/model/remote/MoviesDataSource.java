@@ -1,7 +1,5 @@
 package com.myd.movies.mvp.model.remote;
 
-import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
-
 import io.reactivex.Maybe;
 
 /**

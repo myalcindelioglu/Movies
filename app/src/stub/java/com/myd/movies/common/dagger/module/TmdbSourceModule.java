@@ -66,7 +66,7 @@ public class TmdbSourceModule {
         builder.connectTimeout(10, TimeUnit.SECONDS);
         builder.readTimeout(10, TimeUnit.SECONDS);
 
-        // build okhttp client
+        // build okHttp client
         return builder
                 .addInterceptor(new TmdbApiInterceptor())
                 .build();

@@ -14,7 +14,7 @@ import io.reactivex.Single;
  */
 
 public class FakeDetailsDataSource implements MovieDetailsDataSource {
-    public static final MovieDetails SERVICE_DATA = new MovieDetails();
+    private static final MovieDetails SERVICE_DATA = new MovieDetails();
 
     @Inject
     public FakeDetailsDataSource() {

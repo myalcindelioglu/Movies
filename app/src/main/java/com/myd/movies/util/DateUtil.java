@@ -11,7 +11,7 @@ import java.util.Locale;
  */
 
 public class DateUtil {
-    public static String epochToString(long epochDate) {
+    private static String epochToString(long epochDate) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return sdf.format(new Date(epochDate));
     }

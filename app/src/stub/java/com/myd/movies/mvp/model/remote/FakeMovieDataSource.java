@@ -2,7 +2,6 @@ package com.myd.movies.mvp.model.remote;
 
 import android.support.annotation.VisibleForTesting;
 
-import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 import com.myd.movies.mvp.model.Local.Movie;
 
 import java.util.ArrayList;

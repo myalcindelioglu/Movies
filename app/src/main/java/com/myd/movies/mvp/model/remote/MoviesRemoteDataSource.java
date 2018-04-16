@@ -3,7 +3,6 @@ package com.myd.movies.mvp.model.remote;
 import android.support.annotation.NonNull;
 
 import com.myd.movies.common.data.remote.TmdbService;
-import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 
 import javax.inject.Inject;
 

@@ -1,4 +1,4 @@
-package com.myd.movies.common.data.remote.response;
+package com.myd.movies.mvp.model.remote;
 
 import com.myd.movies.mvp.model.Local.Movie;
 

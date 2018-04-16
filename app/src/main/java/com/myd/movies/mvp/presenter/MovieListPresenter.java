@@ -3,7 +3,7 @@ package com.myd.movies.mvp.presenter;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
+import com.myd.movies.mvp.model.remote.MoviesRemoteResponse;
 import com.myd.movies.mvp.MovieListContract;
 import com.myd.movies.mvp.model.remote.MoviesDataSource;
 import com.myd.movies.util.RxUtil;

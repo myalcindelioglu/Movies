@@ -38,7 +38,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
             dataSource.getDetails(movieId).compose(RxUtil.applySingleSchedulers());
 
         movieDetailsSingle.subscribe(movieDetails -> {
-                    Log.e(TAG, "getDetails has an error for movieId= " + movieId);
+                    Log.d(TAG, "getDetails = " + movieDetails);
                     view.loadViews(movieDetails);
                 },
                 e -> {

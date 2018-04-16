@@ -67,4 +67,20 @@ public class MovieListPresenterTest {
         verify(view, times(1)).showProgress(false);
         verify(view, timeout(400).times(1)).showData(Collections.singletonList(movie), false);
     }
+
+    @Test
+    public void testSubscribeResponse() throws Exception {
+        String date = "2018-2-27";
+        Movie movie = TestUtil.createMovie(date);
+        MoviesRemoteResponse testResponse = TestUtil.createMoviesRemoteResponse(movie);
+
+        presenter.subscribeResponse(Maybe.just(testResponse), false);
+        verify(view, timeout(400).times(1)).showData(Collections.singletonList(movie), false);
+
+        presenter.subscribeResponse(Maybe.just(testResponse), true);
+        verify(view, timeout(400).times(1)).showData(Collections.singletonList(movie), true);
+
+    }
+
+
 }

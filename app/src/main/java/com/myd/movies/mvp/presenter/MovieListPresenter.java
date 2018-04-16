@@ -75,7 +75,7 @@ public class MovieListPresenter implements MovieListContract.Presenter {
 
     }
 
-    private void subscribeResponse(Maybe<MoviesRemoteResponse> responseMaybe, boolean isLoadMore) {
+    void subscribeResponse(Maybe<MoviesRemoteResponse> responseMaybe, boolean isLoadMore) {
         Disposable disposable = responseMaybe.subscribe(resp -> {
                     Log.d(TAG, resp.getResults().toString() + " totalPages = " + totalPages);
                     view.showData(resp.getResults(), isLoadMore);

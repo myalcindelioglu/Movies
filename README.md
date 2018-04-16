@@ -18,6 +18,7 @@ Libraries used on this application
 * [Dagger2](https://github.com/google/dagger)
 * [RxJava](https://github.com/ReactiveX/RxJava)
 * [RxAndroid](https://github.com/ReactiveX/RxAndroid)
+* [picasso](https://github.com/square/picasso)
 * [junit, Mockito](http://site.mockito.org)
 * [Espresso](https://developer.android.com/training/testing/espresso/index.html)
 

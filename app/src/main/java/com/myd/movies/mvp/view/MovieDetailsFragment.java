@@ -5,9 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,24 +17,26 @@ import com.myd.movies.BuildConfig;
 import com.myd.movies.R;
 import com.myd.movies.mvp.MovieDetailContract;
 import com.myd.movies.mvp.model.Local.MovieDetails;
-import com.myd.movies.mvp.model.remote.MovieDetailsDataSource;
-import com.myd.movies.mvp.model.remote.MovieDetailsRemoteDataSource;
 import com.myd.movies.mvp.presenter.MovieDetailPresenter;
-import com.myd.movies.util.TmdbServiceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
+
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 
 /**
  * Created by MYD on 4/14/18.
  *
  */
 
-public class MovieDetailsFragment extends Fragment implements MovieDetailContract.View {
+public class MovieDetailsFragment extends DaggerFragment implements MovieDetailContract.View {
 
     public static final String MOVIE_ID_KEY = "MOVIE_ID";
 
-    private MovieDetailPresenter presenter;
+    @Inject
+    public MovieDetailPresenter presenter;
 
     private ImageView posterImage;
     private ImageView backdropImage;
@@ -71,9 +71,7 @@ public class MovieDetailsFragment extends Fragment implements MovieDetailContrac
         if (args != null) {
             movieId = args.getInt(MOVIE_ID_KEY, -1);
         }
-        MovieDetailsDataSource dataSource = new MovieDetailsRemoteDataSource(TmdbServiceHelper.getService());
-        presenter = new MovieDetailPresenter(dataSource, this);
-        presenter.subscribe();
+        presenter.subscribe(this);
     }
 
     @Nullable

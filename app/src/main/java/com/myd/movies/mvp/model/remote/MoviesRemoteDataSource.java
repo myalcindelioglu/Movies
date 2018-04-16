@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.myd.movies.common.data.remote.TmdbService;
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 
+import javax.inject.Inject;
+
 import io.reactivex.Maybe;
 
 /**
@@ -16,6 +18,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
 
     private TmdbService tmdbService;
 
+    @Inject
     public MoviesRemoteDataSource(@NonNull TmdbService tmdbService) {
         this.tmdbService = tmdbService;
     }

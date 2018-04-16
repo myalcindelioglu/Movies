@@ -8,7 +8,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,13 +21,18 @@ import com.myd.movies.util.RxUtil;
 
 import java.util.Calendar;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerAppCompatActivity;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View {
+public class MainActivity extends DaggerAppCompatActivity implements MainContract.View {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
-    private MainPresenter presenter;
+    @Inject
+    public MainPresenter presenter;
+
     private MenuItem filterMenu;
 
     @Override
@@ -37,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
-        presenter = new MainPresenter(this);
-        presenter.subscribe();
+        presenter = new MainPresenter();
+        presenter.subscribe(this);
     }
 
     @Override

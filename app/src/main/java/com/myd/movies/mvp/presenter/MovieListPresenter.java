@@ -5,8 +5,10 @@ import android.util.Log;
 
 import com.myd.movies.common.data.remote.response.MoviesRemoteResponse;
 import com.myd.movies.mvp.MovieListContract;
-import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
+import com.myd.movies.mvp.model.remote.MoviesDataSource;
 import com.myd.movies.util.RxUtil;
+
+import javax.inject.Inject;
 
 import io.reactivex.Maybe;
 import io.reactivex.disposables.CompositeDisposable;
@@ -23,18 +25,16 @@ public class MovieListPresenter implements MovieListContract.Presenter {
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
 
-    private MoviesRemoteDataSource moviesRemoteDataSource;
+    private MoviesDataSource moviesDataSource;
     private MovieListContract.View view;
 
     private int totalPages = 0;
     private String filterDate = "";
 
-    public MovieListPresenter(MoviesRemoteDataSource moviesRemoteDataSource,
-                              MovieListContract.View view) {
-        this.moviesRemoteDataSource = moviesRemoteDataSource;
-        this.view = view;
+    @Inject
+    MovieListPresenter(MoviesDataSource moviesDataSource) {
+        this.moviesDataSource = moviesDataSource;
     }
-
 
     @Override
     public void discoverMovies(int nextPage, boolean isLoadMore) {
@@ -47,9 +47,9 @@ public class MovieListPresenter implements MovieListContract.Presenter {
 
         Maybe<MoviesRemoteResponse> responseMaybe;
         if (this.filterDate.isEmpty()) {
-            responseMaybe = moviesRemoteDataSource.discoverMovies(nextPage).compose(RxUtil.applyMaybeSchedulers());
+            responseMaybe = moviesDataSource.discoverMovies(nextPage).compose(RxUtil.applyMaybeSchedulers());
         } else {
-            responseMaybe = moviesRemoteDataSource.filterMovies(filterDate, nextPage).compose(RxUtil.applyMaybeSchedulers());
+            responseMaybe = moviesDataSource.filterMovies(filterDate, nextPage).compose(RxUtil.applyMaybeSchedulers());
 
         }
 
@@ -68,7 +68,7 @@ public class MovieListPresenter implements MovieListContract.Presenter {
         view.showProgress(isLoadMore);
 
         Maybe<MoviesRemoteResponse> responseMaybe =
-                moviesRemoteDataSource.filterMovies(filterDate, nextPage)
+                moviesDataSource.filterMovies(filterDate, nextPage)
                         .compose(RxUtil.applyMaybeSchedulers());
 
         subscribeResponse(responseMaybe, isLoadMore);
@@ -90,8 +90,8 @@ public class MovieListPresenter implements MovieListContract.Presenter {
     }
 
     @Override
-    public void subscribe() {
-
+    public void subscribe(MovieListContract.View view) {
+        this.view = view;
     }
 
     @Override

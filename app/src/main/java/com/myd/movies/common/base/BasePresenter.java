@@ -5,7 +5,7 @@ package com.myd.movies.common.base;
  *
  */
 
-public interface BasePresenter {
-    void subscribe();
+public interface BasePresenter<T> {
+    void subscribe(T view);
     void unSubscribe();
 }

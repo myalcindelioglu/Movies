@@ -17,11 +17,10 @@ public interface MainContract {
         void showMovieList();
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter<View> {
         void filterMovies(String date);
         void handleOnMovieClick(int movieId);
         void handleFilterClick();
         void handleBackPress();
-
     }
 }

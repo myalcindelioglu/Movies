@@ -20,7 +20,7 @@ public interface MovieListContract {
         void showError(boolean isLoadMore);
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter<View> {
         void discoverMovies(int nextPage, boolean isLoadMore);
         void filterMovies(@NonNull String filterDate, int nextPage, boolean isLoadMore);
     }

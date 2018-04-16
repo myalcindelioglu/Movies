@@ -5,40 +5,40 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.myd.movies.BuildConfig;
 import com.myd.movies.R;
 import com.myd.movies.mvp.MovieListContract;
 import com.myd.movies.mvp.model.Local.Movie;
-import com.myd.movies.mvp.model.remote.MoviesRemoteDataSource;
 import com.myd.movies.mvp.presenter.MovieListPresenter;
-import com.myd.movies.util.TmdbServiceHelper;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import io.reactivex.subjects.PublishSubject;
 
-public class MovieListFragment extends Fragment implements MovieListContract.View {
+public class MovieListFragment extends DaggerFragment implements MovieListContract.View {
 
-    private MovieListPresenter presenter;
+    @Inject
+    public MovieListPresenter presenter;
 
-    private MoviesAdapter moviesAdapter;
+    @Inject
+    public PublishSubject<Integer> movieIdPublisher;
 
-    private final PublishSubject<Integer> movieIdPublisher = PublishSubject.create();
+    @Inject
+    public MoviesAdapter moviesAdapter;
+
     private View loadMoreProgress;
     private View loadProgress;
     private RecyclerView recyclerView;
-    private InfiniteScrollListenerImpl infiniteScrollListener;
+
+    private InfiniteScrollListener infiniteScrollListener;
 
     public MovieListFragment() {
     }
@@ -46,9 +46,7 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MoviesRemoteDataSource moviesRemoteDataSource = new MoviesRemoteDataSource(TmdbServiceHelper.getService());
-        presenter = new MovieListPresenter(moviesRemoteDataSource, this);
-        presenter.subscribe();
+        presenter.subscribe(this);
     }
 
     @Override
@@ -64,7 +62,6 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
         infiniteScrollListener = new InfiniteScrollListenerImpl(linearLayoutManager);
         recyclerView.addOnScrollListener(infiniteScrollListener);
 
-        moviesAdapter = new MoviesAdapter(new ArrayList<>());
         recyclerView.setAdapter(moviesAdapter);
 
         presenter.discoverMovies(1, false);
@@ -91,9 +88,9 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
     public void showData(List<Movie> movies, boolean isLoadMore) {
         hideProgress(isLoadMore);
         if (!isLoadMore) {
-            moviesAdapter.movies.clear();
+            moviesAdapter.getMovies().clear();
         }
-        moviesAdapter.movies.addAll(movies);
+        moviesAdapter.getMovies().addAll(movies);
         moviesAdapter.notifyDataSetChanged();
 
     }
@@ -132,62 +129,6 @@ public class MovieListFragment extends Fragment implements MovieListContract.Vie
         @Override
         public void onLoadMore(int nextPage) {
             presenter.discoverMovies(nextPage, true);
-        }
-    }
-
-    private class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
-
-        private List<Movie> movies;
-
-        MoviesAdapter(@NonNull List<Movie> movies) {
-            this.movies = movies;
-        }
-
-        @NonNull
-        @Override
-        public MoviesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_movies_list_item, parent, false);
-            ImageView poster = view.findViewById(R.id.fragment_movie_list_item_movies_poster_iv);
-            TextView title = view.findViewById(R.id.fragment_movie_list_item_movies_title_txv);
-            TextView releaseDate = view.findViewById(R.id.fragment_movie_list_item_movies_release_date_txv);
-            return new MoviesViewHolder(view, poster, title, releaseDate);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
-
-            String posterPath = movies.get(position).getPoster_path();
-            Picasso.with(getContext())
-                    .load(BuildConfig.TMDB_SECURE_IMAGE_URL + "w500" + posterPath)
-                    .into(holder.poster);
-            holder.title.setText(movies.get(position).getTitle());
-            holder.releaseDate.setText(movies.get(position).getRelease_date());
-
-            final Integer movieId = movies.get(position).getId();
-            holder.itemView.setOnClickListener(v -> movieIdPublisher.onNext(movieId));
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return movies.size();
-        }
-
-        class MoviesViewHolder extends RecyclerView.ViewHolder {
-
-            private ImageView poster;
-            private TextView title;
-            private TextView releaseDate;
-
-            MoviesViewHolder(View itemView,
-                             ImageView poster,
-                             TextView title,
-                             TextView releaseDate) {
-                super(itemView);
-                this.poster = poster;
-                this.title = title;
-                this.releaseDate = releaseDate;
-            }
         }
     }
 }

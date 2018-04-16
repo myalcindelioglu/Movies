@@ -26,7 +26,8 @@ public class MainPresenterTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        presenter = new MainPresenter(view);
+        presenter = new MainPresenter();
+        presenter.subscribe(view);
     }
 
     @Test
@@ -56,7 +57,7 @@ public class MainPresenterTest {
 
     @Test
     public void testSubscribe() throws Exception {
-        presenter.subscribe();
+        presenter.subscribe(view);
         verify(view, times(1)).subscribeMovieOnClick();
     }
 }

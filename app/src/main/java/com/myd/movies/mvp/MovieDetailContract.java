@@ -16,7 +16,7 @@ public interface MovieDetailContract {
         void showError();
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter<View> {
         void getDetails(int movieId);
     }
 }

@@ -40,7 +40,8 @@ public class MovieListPresenterTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
-        presenter = new MovieListPresenter(dataSource, view);
+        presenter = new MovieListPresenter(dataSource);
+        presenter.subscribe(view);
     }
 
     @Test

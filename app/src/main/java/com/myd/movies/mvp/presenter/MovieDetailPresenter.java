@@ -7,6 +7,8 @@ import com.myd.movies.mvp.model.Local.MovieDetails;
 import com.myd.movies.mvp.model.remote.MovieDetailsDataSource;
 import com.myd.movies.util.RxUtil;
 
+import javax.inject.Inject;
+
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -24,9 +26,9 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     private MovieDetailsDataSource dataSource;
     private MovieDetailContract.View view;
 
-    public MovieDetailPresenter(MovieDetailsDataSource dataSource, MovieDetailContract.View view) {
+    @Inject
+    public MovieDetailPresenter(MovieDetailsDataSource dataSource) {
         this.dataSource = dataSource;
-        this.view = view;
     }
 
     @Override
@@ -46,8 +48,8 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         );
     }
 
-    @Override
-    public void subscribe() {
+    public void subscribe(MovieDetailContract.View view) {
+        this.view = view;
 
     }
 

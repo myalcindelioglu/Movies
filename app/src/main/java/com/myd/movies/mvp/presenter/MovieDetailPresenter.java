@@ -37,7 +37,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         Single<MovieDetails> movieDetailsSingle =
             dataSource.getDetails(movieId).compose(RxUtil.applySingleSchedulers());
 
-        movieDetailsSingle.subscribe(movieDetails -> {
+        subscriptions.add(movieDetailsSingle.subscribe(movieDetails -> {
                     Log.d(TAG, "getDetails = " + movieDetails);
                     view.loadViews(movieDetails);
                 },
@@ -45,7 +45,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
                     Log.e(TAG, "getDetails has an error for movieId= " + movieId, e);
                     view.showError();
                 }
-        );
+        ));
     }
 
     public void subscribe(MovieDetailContract.View view) {
